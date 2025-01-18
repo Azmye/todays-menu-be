@@ -1,4 +1,5 @@
 import express from "express";
+import db from "./db";
 
 const app = express();
 
@@ -9,6 +10,6 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Running on PORT :${PORT}`);
 });
