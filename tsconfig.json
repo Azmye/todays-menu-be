@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@routes/*": ["src/routes/*"],
+      "@services/*": ["src/services/*"],
+      "@dto/*": ["src/dto/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@db/*": ["src/db/*"],
+      "@schema/*": ["src/db/schema/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  }
+}
