@@ -3,7 +3,7 @@ import { roles, userRoles, users } from "@db/schema";
 import { LoginDto, RegisterDto } from "@dto/authDto";
 import { eq, or } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
-import { generateToken } from "utils/jwt";
+import { generateToken } from "@utils/jwt";
 
 export const register = async (request: RegisterDto) => {
   const existingUser = await db.query.users.findFirst({
