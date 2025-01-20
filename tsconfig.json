@@ -6,7 +6,7 @@
     "baseUrl": ".",
     "paths": {
       "@routes/*": ["src/routes/*"],
-      "@services/*": ["src/services/*"],
+      "@handlers/*": ["src/handlers/*"],
       "@dto/*": ["src/dto/*"],
       "@middleware/*": ["src/middleware/*"],
       "@db/*": ["src/db/*"],
