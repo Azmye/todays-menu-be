@@ -4,6 +4,7 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "cloudinary": "^2.5.1",
     "drizzle-orm": "^0.38.4",
     "hono": "^4.6.17",
     "pg": "^8.13.1",
