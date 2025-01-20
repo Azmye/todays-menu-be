@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import stores from "./store";
 import userRoles from "./userRole";
+import refreshTokens from "./refreshToken";
 
 const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -44,6 +45,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
     fields: [users.id],
     references: [stores.userId],
   }),
+  refreshTokens: many(refreshTokens),
 }));
 
 export type User = typeof users.$inferSelect;

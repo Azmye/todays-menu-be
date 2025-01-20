@@ -1,5 +1,10 @@
 import { LoginDtoSchema, RegisterDtoSchema } from "@dto/authDto";
-import { login, register } from "@services/authService";
+import {
+  login,
+  refreshToken,
+  register,
+  revokeRefreshToken,
+} from "@handlers/authHandler";
 import { Hono } from "hono";
 
 const authRoute = new Hono()
@@ -26,6 +31,18 @@ const authRoute = new Hono()
     return c.json({
       data: result,
     });
+  })
+  .post("/refresh", async (c) => {
+    const result = await refreshToken({
+      refreshToken: c.req.header("x-refresh-token")!,
+    });
+
+    return c.json(result);
+  })
+  .post("/logout", async (c) => {
+    await revokeRefreshToken(c.req.header("x-refresh-token")!);
+
+    return c.json({ message: "Logged out successfully" });
   });
 
 export default authRoute;
