@@ -20,7 +20,6 @@ const stores = pgTable("stores", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull()
     .unique(),
-
   storeName: varchar("store_name", { length: 255 }).notNull(),
   storeAddress: text("store_address"),
   storePhone: varchar("store_phone", { length: 20 }),

@@ -10,6 +10,8 @@ app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
+app.use(logger());
+
 app.route("api/auth", authRoute);
 
 app.notFound((c) => {
