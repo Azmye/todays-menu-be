@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import userRoute from "@routes/userRoute";
 import userRoleRoute from "@routes/userRoleRoute";
 import roleRoute from "@routes/roleRoute";
+import storeRoute from "@routes/storeRoute";
 
 const app = new Hono();
 
@@ -19,6 +20,7 @@ app.route("api/auth", authRoute);
 app.route("api/user", userRoute);
 app.route("api/user-role", userRoleRoute);
 app.route("api/role", roleRoute);
+app.route("api/store", storeRoute);
 
 app.notFound((c) => {
   return c.json({

@@ -11,6 +11,8 @@ import {
 import stores from "./store";
 import userRoles from "./userRole";
 import refreshTokens from "./refreshToken";
+import db from "..";
+import { InferResultType } from "@utils/inferResultType";
 
 const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -50,5 +52,15 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type UserWithRelations = InferResultType<
+  "users",
+  {
+    userRoles: {
+      with: {
+        role: true;
+      };
+    };
+  }
+>;
 
 export default users;
