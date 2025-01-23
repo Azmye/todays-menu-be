@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 import { logger } from "hono/logger";
 import userRoute from "@routes/userRoute";
 import userRoleRoute from "@routes/userRoleRoute";
+import roleRoute from "@routes/roleRoute";
 
 const app = new Hono();
 
@@ -17,6 +18,7 @@ app.use(logger());
 app.route("api/auth", authRoute);
 app.route("api/user", userRoute);
 app.route("api/user-role", userRoleRoute);
+app.route("api/role", roleRoute);
 
 app.notFound((c) => {
   return c.json({
@@ -28,7 +30,7 @@ app.onError(async (err, c) => {
   if (err instanceof HTTPException) {
     c.status(err.status);
     return c.json({
-      errors: err.message,
+      message: err.message,
     });
   } else if (err instanceof ZodError) {
     c.status(400);
@@ -42,7 +44,7 @@ app.onError(async (err, c) => {
   } else {
     c.status(500);
     return c.json({
-      errors: err.message,
+      message: err.message,
     });
   }
 });
