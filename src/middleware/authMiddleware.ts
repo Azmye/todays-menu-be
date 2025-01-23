@@ -52,13 +52,13 @@ export const createAuthMiddleware = (requiredRole?: string[]) => {
             message: "You don't have permission to access this resource",
           });
         }
-
-        c.set("user", user);
-        c.set(
-          "userRole",
-          user.userRoles.map((ur) => ur.role.name)
-        );
       }
+
+      c.set("user", user);
+      c.set(
+        "userRole",
+        user.userRoles.map((ur) => ur.role.name)
+      );
 
       await next();
     } catch (error: any) {
@@ -78,4 +78,5 @@ export const createAuthMiddleware = (requiredRole?: string[]) => {
 
 export const adminOnly = createAuthMiddleware(["admin"]);
 export const customerOnly = createAuthMiddleware(["customer"]);
+export const sellerOnly = createAuthMiddleware(["seller"]);
 export const authRequired = createAuthMiddleware();

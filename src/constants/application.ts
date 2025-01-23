@@ -5,4 +5,5 @@ export const API_MESSAGES = {
   SUCCESS_DELETED: "Data successfully deleted",
 
   FAILED_NOT_FOUND: "Data not found!",
+  FAILED_DATA_IS_EXISTS: "Data is already exists",
 };

@@ -1,12 +1,9 @@
-import { User } from "@db/schema/user";
+import { UserWithRelations } from "@db/schema/user";
 import { z } from "zod";
 
-declare module "hono" {
-  interface ContextVariables {
-    user: User;
-    userRoles: string[];
-  }
-}
+export type UserContext = {
+  Variables: { user: UserWithRelations; userRoles: string[] };
+};
 
 export const UserUpdateDtoSchema = z.object({
   email: z.string().email().optional(),

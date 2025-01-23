@@ -20,7 +20,8 @@ const stores = pgTable("stores", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull()
     .unique(),
-  storeName: varchar("store_name", { length: 255 }).notNull(),
+  storeName: varchar("store_name", { length: 255 }).notNull().unique(),
+  storeUrlName: varchar("store_url_name", { length: 255 }).notNull().unique(),
   storeAddress: text("store_address"),
   storePhone: varchar("store_phone", { length: 20 }),
 
@@ -30,9 +31,14 @@ const stores = pgTable("stores", {
   profileImageUrl: varchar("profile_image_url", { length: 512 }),
   bannerImageUrl: varchar("banner_image_url", { length: 512 }),
 
-  operatingHours: json("operating_hours").$type<{
-    [key: string]: { open: string; close: string; closed: boolean };
-  }>(),
+  operatingHours: json("operating_hours").$type<
+    {
+      open: string;
+      close: string;
+      closed: boolean;
+      day: string;
+    }[]
+  >(),
 
   isVerified: boolean("is_verified").default(false).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -45,7 +51,7 @@ const stores = pgTable("stores", {
 
 export const storesRelations = relations(stores, ({ one }) => ({
   user: one(users, {
-    fields: [stores.id],
+    fields: [stores.userId],
     references: [users.id],
   }),
 }));
