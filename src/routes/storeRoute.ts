@@ -80,9 +80,9 @@ const storeRoute = new Hono<UserContext>()
       message: API_MESSAGES.SUCCESS_DELETED,
     });
   })
-  .put("/:uuid", adminOnly, async (c) => {
+  .put("/store-verify/:uuid", adminOnly, async (c) => {
     const uuid = c.req.param("uuid");
-    const request = c.req.json();
+    const request = await c.req.json();
 
     const { verify } = StoreVerifyDtoSchema.parse(request);
 
