@@ -21,6 +21,13 @@ export const getAllUsers = async () => {
 export const getUser = async (uuid: string) => {
   const user = await db.query.users.findFirst({
     where: eq(users.uuid, uuid),
+    with: {
+      userRoles: {
+        with: {
+          role: true,
+        },
+      },
+    },
   });
 
   if (!user) {

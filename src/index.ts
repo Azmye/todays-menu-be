@@ -4,6 +4,7 @@ import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
 import { logger } from "hono/logger";
 import userRoute from "@routes/userRoute";
+import userRoleRoute from "@routes/userRoleRoute";
 
 const app = new Hono();
 
@@ -15,6 +16,7 @@ app.use(logger());
 
 app.route("api/auth", authRoute);
 app.route("api/user", userRoute);
+app.route("api/user-role", userRoleRoute);
 
 app.notFound((c) => {
   return c.json({
