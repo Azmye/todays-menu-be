@@ -1,4 +1,9 @@
+import { User } from "@db/schema/user";
 import { v2 as cloudinary } from "cloudinary";
+import { HTTPException } from "hono/http-exception";
+import { API_MESSAGES } from "src/constants/application";
+import { encodeBase64 } from "hono/utils/encode";
+import { extractPublicId } from "cloudinary-build-url";
 
 cloudinary.config({
   api_key: process.env.CLOUDINARY_KEY,
@@ -6,26 +11,38 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const uploadImage = async (base64: string, fileType: string) => {
+const uploadImage = async ({
+  image,
+  user,
+  imageType,
+}: {
+  image: File;
+  user: User;
+  imageType: "profile" | "product";
+}) => {
   const options = {
-    use_filename: true,
-    unique_filename: false,
-    overwrite: true,
+    unique_filename: true,
+    overwrite: false,
   };
+
+  const byteArrayBuffer = await image.arrayBuffer();
+  const base64 = encodeBase64(byteArrayBuffer);
 
   try {
     const result = await cloudinary.uploader.upload(
-      `data:${fileType};base64,${base64}`,
+      `data:image/png;base64,${base64}`,
       {
         ...options,
-        folder: "todays-menu",
+        folder: `${user.username}/${imageType}`,
+        public_id: `profile-${image.name.split(".")[0]}`,
       }
     );
 
     return result;
-  } catch (error) {
-    console.log(error);
-    return error;
+  } catch (error: any) {
+    throw new HTTPException(400, {
+      message: error,
+    });
   }
 };
 
@@ -35,8 +52,23 @@ const getAssetInfo = async (publicId: string) => {
 
     return result;
   } catch (error) {
-    return error;
+    throw new HTTPException(404, {
+      message: API_MESSAGES.FAILED_NOT_FOUND,
+    });
   }
 };
 
-export { uploadImage, getAssetInfo };
+const deleteAsset = async (secure_url: string) => {
+  const publicId = extractPublicId(secure_url);
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    return result;
+  } catch (error) {
+    throw new HTTPException(409, {
+      message: "File failed to delete",
+    });
+  }
+};
+
+export { uploadImage, getAssetInfo, deleteAsset };
