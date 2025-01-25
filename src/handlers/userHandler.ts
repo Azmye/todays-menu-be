@@ -1,6 +1,8 @@
 import db from "@db/index";
 import { users } from "@db/schema";
+import { UserWithRelations } from "@db/schema/user";
 import { UserUpdateDto } from "@dto/userDto";
+import { deleteAsset, uploadImage } from "@utils/cloudinary";
 import { eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 
@@ -59,7 +61,6 @@ export const userUpdate = async (request: UserUpdateDto, uuid: string) => {
       firstName: request.firstName,
       lastName: request.lastName,
       phoneNumber: request.phoneNumber,
-      profilePhotoUrl: request.profilePhotoUrl,
       dateOfBirth: request.dateOfBirth,
       gender: request.gender,
       isActive: request.isActive,
@@ -70,6 +71,43 @@ export const userUpdate = async (request: UserUpdateDto, uuid: string) => {
 
   return {
     user: updatedUser,
+  };
+};
+
+export const userChangeProfileImage = async (
+  user: UserWithRelations,
+  file: File
+) => {
+  const isUserExists = await db.query.users.findFirst({
+    where: eq(users.uuid, user.uuid),
+  });
+
+  if (!isUserExists) {
+    throw new HTTPException(404, { message: "User not found!" });
+  }
+
+  const oldPhotoUrl = isUserExists.profilePhotoUrl;
+
+  const uploadResult = await uploadImage({
+    user: user,
+    image: file,
+    imageType: "profile",
+  });
+
+  if (oldPhotoUrl && oldPhotoUrl !== uploadResult.secure_url) {
+    await deleteAsset(oldPhotoUrl);
+  }
+
+  const [updatedUser] = await db
+    .update(users)
+    .set({
+      profilePhotoUrl: uploadResult.secure_url,
+    })
+    .where(eq(users.uuid, user.uuid))
+    .returning();
+
+  return {
+    updatedUser,
   };
 };
 

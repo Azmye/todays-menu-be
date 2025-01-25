@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "cloudinary": "^2.5.1",
+    "cloudinary-build-url": "^0.2.4",
     "drizzle-orm": "^0.38.4",
     "hono": "^4.6.17",
     "pg": "^8.13.1",
