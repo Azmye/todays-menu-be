@@ -89,7 +89,7 @@ export const userChangeProfileImage = async (
   const oldPhotoUrl = isUserExists.profilePhotoUrl;
 
   const uploadResult = await uploadImage({
-    user: user,
+    uuid: user.uuid,
     image: file,
     imageType: "profile",
   });
