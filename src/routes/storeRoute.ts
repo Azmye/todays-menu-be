@@ -10,6 +10,7 @@ import {
   getStores,
   newStore,
   updateStore,
+  updateStoreImage,
   verifyStore,
 } from "@handlers/storeHandler";
 import {
@@ -30,10 +31,11 @@ const storeRoute = new Hono<UserContext>()
       data: result,
     });
   })
-  .get("/:storeUrlName", async (c) => {
-    const storeUrlName = c.req.param("storeUrlName");
+  .get("/:uuid", async (c) => {
+    const uuid = c.req.param("uuid");
+    const storeUrlName = c.req.query("storeName");
 
-    const result = await getStore({ storeUrlName });
+    const result = await getStore({ uuid, storeUrlName });
 
     c.status(200);
     return c.json({
@@ -87,6 +89,32 @@ const storeRoute = new Hono<UserContext>()
     const { verify } = StoreVerifyDtoSchema.parse(request);
 
     const result = await verifyStore({ uuid, verify });
+
+    c.status(200);
+    return c.json({
+      message: API_MESSAGES.SUCCESS_UPDATED,
+      data: result,
+    });
+  })
+  .patch("/change_store_image/:uuid", sellerOnly, async (c) => {
+    const uuid = c.req.param("uuid");
+    const body = await c.req.parseBody();
+    const imageRequest = body["storeImageUrl"] as File;
+
+    const result = await updateStoreImage(uuid, imageRequest);
+
+    c.status(200);
+    return c.json({
+      message: API_MESSAGES.SUCCESS_UPDATED,
+      data: result,
+    });
+  })
+  .patch("/change_store_banner/:uuid", sellerOnly, async (c) => {
+    const uuid = c.req.param("uuid");
+    const body = await c.req.parseBody();
+    const imageRequest = body["bannerImageUrl"] as File;
+
+    const result = await updateStoreImage(uuid, imageRequest);
 
     c.status(200);
     return c.json({
