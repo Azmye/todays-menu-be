@@ -7,6 +7,7 @@ import { API_MESSAGES } from "src/constants/application";
 import { getUser } from "./userHandler";
 import { userRoleUpdate } from "./userRoleHandler";
 import { User, UserWithRelations } from "@db/schema/user";
+import { deleteAsset, uploadImage } from "@utils/cloudinary";
 
 export const getStores = async () => {
   const stores = await db.query.stores.findMany();
@@ -144,5 +145,73 @@ export const verifyStore = async ({
 
   return {
     verifiedStore,
+  };
+};
+
+export const updateStoreImage = async (uuid: string, file: File) => {
+  const isStoreExists = await getStore({ uuid: uuid });
+
+  if (!isStoreExists.store) {
+    throw new HTTPException(404, {
+      message: API_MESSAGES.FAILED_NOT_FOUND,
+    });
+  }
+
+  const uploadResult = await uploadImage({
+    image: file,
+    imageType: "store",
+    uuid: uuid,
+  });
+
+  const oldPhotoUrl = isStoreExists.store.profileImageUrl;
+
+  if (oldPhotoUrl && oldPhotoUrl !== uploadResult.secure_url) {
+    await deleteAsset(oldPhotoUrl);
+  }
+
+  const [updatedStore] = await db
+    .update(stores)
+    .set({
+      profileImageUrl: uploadResult.secure_url,
+    })
+    .where(eq(stores.uuid, isStoreExists.store.uuid))
+    .returning();
+
+  return {
+    updatedStore,
+  };
+};
+
+export const updateStoreBanner = async (uuid: string, file: File) => {
+  const isStoreExists = await getStore({ uuid: uuid });
+
+  if (!isStoreExists.store) {
+    throw new HTTPException(404, {
+      message: API_MESSAGES.FAILED_NOT_FOUND,
+    });
+  }
+
+  const uploadResult = await uploadImage({
+    image: file,
+    imageType: "store",
+    uuid: uuid,
+  });
+
+  const oldPhotoUrl = isStoreExists.store.bannerImageUrl;
+
+  if (oldPhotoUrl && oldPhotoUrl !== uploadResult.secure_url) {
+    await deleteAsset(oldPhotoUrl);
+  }
+
+  const [updatedStore] = await db
+    .update(stores)
+    .set({
+      bannerImageUrl: uploadResult.secure_url,
+    })
+    .where(eq(stores.uuid, isStoreExists.store.uuid))
+    .returning();
+
+  return {
+    updatedStore,
   };
 };

@@ -1,4 +1,4 @@
-import { User } from "@db/schema/user";
+import { User, UserWithRelations } from "@db/schema/user";
 import { v2 as cloudinary } from "cloudinary";
 import { HTTPException } from "hono/http-exception";
 import { API_MESSAGES } from "src/constants/application";
@@ -13,12 +13,12 @@ cloudinary.config({
 
 const uploadImage = async ({
   image,
-  user,
   imageType,
+  uuid,
 }: {
   image: File;
-  user: User;
-  imageType: "profile" | "product";
+  imageType: "profile" | "product" | "store";
+  uuid: string;
 }) => {
   const options = {
     unique_filename: true,
@@ -33,8 +33,8 @@ const uploadImage = async ({
       `data:image/png;base64,${base64}`,
       {
         ...options,
-        folder: `${user.username}/${imageType}`,
-        public_id: `profile-${image.name.split(".")[0]}`,
+        folder: `${uuid}/${imageType}`,
+        public_id: `${imageType}-${image.name.split(".")[0]}`,
       }
     );
 
