@@ -208,7 +208,7 @@ export const updateStoreBanner = async (uuid: string, file: File) => {
     .set({
       bannerImageUrl: uploadResult.secure_url,
     })
-    .where(eq(stores.uuid, isStoreExists.store.uuid))
+    .where(eq(stores.uuid, uuid))
     .returning();
 
   return {
