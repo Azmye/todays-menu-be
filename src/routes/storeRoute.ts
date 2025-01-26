@@ -10,6 +10,7 @@ import {
   getStores,
   newStore,
   updateStore,
+  updateStoreBanner,
   updateStoreImage,
   verifyStore,
 } from "@handlers/storeHandler";
@@ -114,7 +115,7 @@ const storeRoute = new Hono<UserContext>()
     const body = await c.req.parseBody();
     const imageRequest = body["bannerImageUrl"] as File;
 
-    const result = await updateStoreImage(uuid, imageRequest);
+    const result = await updateStoreBanner(uuid, imageRequest);
 
     c.status(200);
     return c.json({
