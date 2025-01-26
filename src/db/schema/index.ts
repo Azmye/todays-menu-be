@@ -6,3 +6,4 @@ export {
   default as refreshTokens,
   refreshTokensRelations,
 } from "./refreshToken";
+export { default as products, productsRelations } from "./product";

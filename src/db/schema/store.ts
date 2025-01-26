@@ -12,6 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import users from "./user";
+import products from "./product";
 
 const stores = pgTable("stores", {
   id: serial("id").primaryKey(),
@@ -49,11 +50,12 @@ const stores = pgTable("stores", {
     .notNull(),
 });
 
-export const storesRelations = relations(stores, ({ one }) => ({
+export const storesRelations = relations(stores, ({ one, many }) => ({
   user: one(users, {
     fields: [stores.userId],
     references: [users.id],
   }),
+  products: many(products),
 }));
 
 export type Store = typeof stores.$inferSelect;
