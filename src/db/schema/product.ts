@@ -32,7 +32,7 @@ const products = pgTable("products", {
     .notNull(),
 });
 
-export const storesRelations = relations(products, ({ one }) => ({
+export const productsRelations = relations(products, ({ one }) => ({
   store: one(stores, {
     fields: [products.storeId],
     references: [stores.id],
