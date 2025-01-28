@@ -60,6 +60,7 @@ export type UserWithRelations = InferResultType<
         role: true;
       };
     };
+    store: true;
   }
 >;
 
