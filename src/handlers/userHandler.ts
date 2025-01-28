@@ -29,6 +29,7 @@ export const getUser = async (uuid: string) => {
           role: true,
         },
       },
+      store: true,
     },
   });
 

@@ -7,6 +7,7 @@ import userRoute from "@routes/userRoute";
 import userRoleRoute from "@routes/userRoleRoute";
 import roleRoute from "@routes/roleRoute";
 import storeRoute from "@routes/storeRoute";
+import productRoute from "@routes/productRoute";
 
 const app = new Hono();
 
@@ -21,6 +22,7 @@ app.route("api/user", userRoute);
 app.route("api/user-role", userRoleRoute);
 app.route("api/role", roleRoute);
 app.route("api/store", storeRoute);
+app.route("api/product", productRoute);
 
 app.notFound((c) => {
   return c.json({
