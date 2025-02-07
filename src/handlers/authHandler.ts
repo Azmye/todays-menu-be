@@ -32,16 +32,24 @@ const generateTokenPair = async (user: User, userRoles: string[]) => {
   const accessToken = await generateToken({
     email: user.email,
     role: userRoles,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour
+    exp: Math.floor(Date.now() / 1000) + 60 * 5, // 1 hour
     nbf: Math.floor(Date.now() / 1000),
     iat: Math.floor(Date.now() / 1000),
   });
 
   const refreshToken = await createRefreshToken(user.id);
 
+  const { username, email, profilePhotoUrl } = user;
+
   return {
     accessToken,
     refreshToken,
+    user: {
+      username,
+      email,
+      profilePhotoUrl,
+      userRoles,
+    },
   };
 };
 

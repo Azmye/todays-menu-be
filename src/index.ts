@@ -8,8 +8,21 @@ import userRoleRoute from "@routes/userRoleRoute";
 import roleRoute from "@routes/roleRoute";
 import storeRoute from "@routes/storeRoute";
 import productRoute from "@routes/productRoute";
+import { cors } from "hono/cors";
 
 const app = new Hono();
+
+app.use(
+  "*", // Apply to all routes
+  cors({
+    origin: "*", // Allow all origins (replace with specific origins in production)
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+    allowHeaders: ["Content-Type", "Authorization", "x-refresh-token"], // Allowed headers
+    exposeHeaders: ["Content-Length", "X-Custom-Header"], // Headers exposed to the client
+    maxAge: 86400, // How long the results of a preflight request can be cached (in seconds)
+    credentials: true, // Allow credentials (e.g., cookies, authorization headers)
+  })
+);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
@@ -19,7 +32,7 @@ app.use(logger());
 
 app.route("api/auth", authRoute);
 app.route("api/user", userRoute);
-app.route("api/user-role", userRoleRoute);
+app.route("api/user_role", userRoleRoute);
 app.route("api/role", roleRoute);
 app.route("api/store", storeRoute);
 app.route("api/product", productRoute);

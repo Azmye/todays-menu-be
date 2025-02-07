@@ -37,7 +37,9 @@ const authRoute = new Hono()
       refreshToken: c.req.header("x-refresh-token")!,
     });
 
-    return c.json(result);
+    return c.json({
+      data: result,
+    });
   })
   .post("/logout", async (c) => {
     await revokeRefreshToken(c.req.header("x-refresh-token")!);
